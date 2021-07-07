@@ -43,7 +43,7 @@ deploy:
     edge: true
     on:
       all_branches: true
-      condition: $TRAVIS_BRANCH =~ ^(master)$     
+      condition: $TRAVIS_BRANCH =~ ^(main)$     
   - provider: elasticbeanstalk
     access_key_id: ${AWS_ACCESS_KEY_ID}
     secret_access_key: ${AWS_SECRET_ACCESS_KEY}
