@@ -13,6 +13,6 @@ curl -X PUT http://ll-es:9200/_snapshot/s3_repository -H "Content-Type: applicat
 
 # Restore "latest" snapshot
 echo "Restoring snapshot"
-curl -X POST http://ll-es:9200/_snapshot/s3_repository/latest/_restore -H "Content-Type: application/json" -d "{ \"indices\":\"sources*,pas*,transcribed*,lifecourses*\" }"
+curl -X POST http://ll-es:9200/_snapshot/s3_repository/my_snapshot/_restore -H "Content-Type: application/json" -d "{ \"indices\":\"sources*,pas*,transcribed*,lifecourses*\" }"
 
 echo "All done"
