@@ -1,4 +1,4 @@
-version: '2'
+version: '3.3'
 
 services:
   ll-es:
@@ -7,18 +7,13 @@ services:
       dockerfile: elasticsearch.Dockerfile
       context: ./elasticsearch
     ports: 
-      - "80:9200"
+      - "90:9200"
       - "9300:9300"
     environment:
       discovery.type: single-node
-  indexer:
-    image: python:3.7
-    container_name: indexer
+  bash:
+    container_name: restorer
+    image: curlimages/curl:latest
+    entrypoint: sh /restore-snapshot.sh
     volumes:
-      - ./indexer:/indexer
-    working_dir: /indexer
-    command: pip install -r requirements.txt 
-    depends_on:
-      - ll-es
-    links:
-      - ll-es
+      - ./restore-snapshot.sh:/restore-snapshot.sh
