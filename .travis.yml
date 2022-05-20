@@ -25,7 +25,7 @@ script:
   # Run tests!
 
   # set image tag based on branch
-  - sed -i "s/{image-tag}/${IMAGE_TAG}/g" docker-compose-elastic-beanstalk.yml > docker-compose.yml
+  - sed -i "s/{image-tag}/${IMAGE_TAG}/g" docker-compose.yml
 
   # build and push linklives-elasticsearch image
   - docker build -f ./elasticsearch/elasticsearch.Dockerfile  -t linklives-elasticsearch ./elasticsearch
