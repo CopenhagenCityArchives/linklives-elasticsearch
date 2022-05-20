@@ -14,7 +14,7 @@ services:
       - "/elasticsearch-data:/usr/share/elasticsearch/data"
   bash:
     container_name: restorer
-    image: curlimages/curl:latest
+    image: dwdraju/alpine-curl-jq:latest
     entrypoint: sh /restore-snapshot.sh
     volumes:
       - ./restore-snapshot.sh:/restore-snapshot.sh

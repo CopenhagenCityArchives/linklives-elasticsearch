@@ -11,8 +11,13 @@ curl -X PUT http://ll-es:9200/_snapshot/s3_repository -H "Content-Type: applicat
             }
         }"
 
+echo "Loading snapshots"
+v=$(curl -X GET http://ll-es:9200/_snapshot/s3_repository/_all | jq .snapshots[-1].snapshot)
+
 # Restore "latest" snapshot
 echo "Restoring snapshot"
-curl -X POST http://ll-es:9200/_snapshot/s3_repository/my_snapshot/_restore -H "Content-Type: application/json" -d "{ \"indices\":\"sources*,pas*,transcribed*,lifecourses*\" }"
+curl -X POST http://ll-es:9200/_snapshot/s3_repository/${v//\"/}/_restore -H "Content-Type: application/json" -d "{ \"indices\":\"sources*,pas*,transcribed*,lifecourses*\" }"
+
+unset v
 
 echo "All done"
