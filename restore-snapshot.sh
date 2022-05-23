@@ -3,7 +3,7 @@ echo "Waiting 60 seconds"
 sleep 60
 
 # Create repository
-echo "Creating repository"
+echo "Creating or updating repository"
 curl -X PUT http://ll-es:9200/_snapshot/s3_repository -H "Content-Type: application/json" \
     -d "{ 
             \"type\": \"s3\", \"settings\": {
@@ -11,12 +11,21 @@ curl -X PUT http://ll-es:9200/_snapshot/s3_repository -H "Content-Type: applicat
             }
         }"
 
-echo "Loading snapshots"
-v=$(curl -X GET http://ll-es:9200/_snapshot/s3_repository/_all | jq .snapshots[-1].snapshot)
+echo "Loading transcribed snapshots"
+v=$(curl -X GET http://ll-es:9200/_snapshot/s3_repository/transcribed* | jq .snapshots[-1].snapshot)
 
 # Restore "latest" snapshot
-echo "Restoring snapshot"
-curl -X POST http://ll-es:9200/_snapshot/s3_repository/${v//\"/}/_restore -H "Content-Type: application/json" -d "{ \"indices\":\"sources*,pas*,transcribed*,lifecourses*\" }"
+echo "Restoring latest transcribed snapshot"
+curl -X POST http://ll-es:9200/_snapshot/s3_repository/${v//\"/}/_restore -H "Content-Type: application/json" -d "{ \"indices\":\"transcribed*\" }"
+
+unset v
+
+echo "Loading pas, lifecourses and sources snapshots"
+v=$(curl -X GET http://ll-es:9200/_snapshot/s3_repository/pas_lifecourses_sources* | jq .snapshots[-1].snapshot)
+
+# Restore "latest" snapshot
+echo "Restoring latest lifecourses and sources snapshot"
+curl -X POST http://ll-es:9200/_snapshot/s3_repository/${v//\"/}/_restore -H "Content-Type: application/json" -d "{ \"indices\":\"pas*,sources*,lifecourses*\" }"
 
 unset v
 
