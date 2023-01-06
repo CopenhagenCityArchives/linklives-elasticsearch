@@ -27,8 +27,11 @@ script:
   # set image tag based on branch
   - sed -i "s/{image-tag}/${IMAGE_TAG}/g" docker-compose.yml
 
-  # build and push linklives-elasticsearch image
+  # build linklives-elasticsearch image
   - docker build -f ./elasticsearch/elasticsearch.Dockerfile  -t linklives-elasticsearch ./elasticsearch
+
+before_deploy: 
+  # tag and push linklives-elasticsearch image
   - docker tag linklives-elasticsearch 282251075226.dkr.ecr.eu-west-1.amazonaws.com/linklives-elasticsearch:${IMAGE_TAG}
   - docker push 282251075226.dkr.ecr.eu-west-1.amazonaws.com/linklives-elasticsearch:${IMAGE_TAG}
 
@@ -42,8 +45,7 @@ deploy:
     bucket: elasticbeanstalk-eu-west-1-282251075226
     edge: true
     on:
-      all_branches: true
-      condition: $TRAVIS_BRANCH =~ ^(main)$     
+      branch: main    
   - provider: elasticbeanstalk
     access_key_id: ${AWS_ACCESS_KEY_ID}
     secret_access_key: ${AWS_SECRET_ACCESS_KEY}
@@ -53,5 +55,4 @@ deploy:
     bucket: elasticbeanstalk-eu-west-1-282251075226
     edge: true
     on:
-      all_branches: true
-      condition: $TRAVIS_BRANCH =~ ^(development)$    
+      branch: development  
